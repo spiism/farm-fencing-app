@@ -17,13 +17,13 @@ export interface ProductsResponse {
   products: Product[];
 }
 
-export type ProductCategory = 
-  | 'all'
-  | 'Wire Fencing'
-  | 'Electric Fence'
-  | 'Fence Posts'
-  | 'Chain Link'
-  | 'Wood Fencing'
-  | 'Fence Tools'
-  | 'Gate Hardware'
-  | 'Livestock Panels';
+export type ProductCategory =
+  | "all"
+  | "Wire Fencing"
+  | "Electric Fence"
+  | "Fence Posts"
+  | "Chain Link"
+  | "Wood Fencing"
+  | "Fence Tools"
+  | "Gate Hardware"
+  | "Livestock Panels";
