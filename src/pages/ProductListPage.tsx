@@ -3,13 +3,17 @@ import { useProducts } from "../hooks/useProducts";
 import ProductGrid from "../components/product/ProductGrid";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
-import type { ProductCategory } from "../types/product";
+import type { ProductCategory, Product } from "../types/product";
+import ProductDetailPage from "./ProductDetailPage";
 
 const ProductListPage: React.FC = () => {
   const { products, loading, error, refetch } = useProducts();
   const [selectedCategory, setSelectedCategory] =
     React.useState<ProductCategory>("all");
   const [searchTerm, setSearchTerm] = React.useState<string>("");
+  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(
+    null
+  );
 
   const categories: ProductCategory[] = React.useMemo(() => {
     const uniqueCategories = Array.from(
@@ -49,6 +53,16 @@ const ProductListPage: React.FC = () => {
 
   if (error) {
     return <ErrorMessage message={error} onRetry={refetch} />;
+  }
+
+  //show product detail if a product is selected
+  if (selectedProduct) {
+    return (
+      <ProductDetailPage
+        product={selectedProduct}
+        onBack={() => setSelectedProduct(null)}
+      />
+    );
   }
 
   return (
@@ -130,7 +144,10 @@ const ProductListPage: React.FC = () => {
           </div>
         </div>
 
-        <ProductGrid products={filteredProducts} />
+        <ProductGrid
+          products={filteredProducts}
+          onProductClick={setSelectedProduct}
+        />
       </main>
     </div>
   );

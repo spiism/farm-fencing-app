@@ -4,9 +4,10 @@ import type { Product } from "../../types/product";
 
 interface ProductGridProps {
   products: Product[];
+  onProductClick?: (product: Product) => void;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ products , onProductClick }) => {
   if (products.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16">
@@ -24,7 +25,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard
+          key={product.id}
+          product={product}
+          onClick={() => onProductClick?.(product)}
+        />
       ))}
     </div>
   );

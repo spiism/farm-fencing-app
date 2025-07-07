@@ -3,13 +3,14 @@ import type { Product } from "../../types/product";
 
 interface ProductCardProps {
   product: Product;
+  onClick?: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, onClick }) => {
   return (
     <div
       className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
-      onClick={() => {}}
+      onClick={onClick}
     >
       <div className="bg-green-100 h-48 flex items-center justify-center">
         <span className="text-6xl">🚜</span>
