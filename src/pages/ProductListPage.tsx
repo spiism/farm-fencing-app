@@ -9,8 +9,8 @@ const ProductListPage: React.FC = () => {
   const { products, loading, error, refetch } = useProducts();
   const [selectedCategory, setSelectedCategory] =
     React.useState<ProductCategory>("all");
+  const [searchTerm, setSearchTerm] = React.useState<string>("");
 
-    
   const categories: ProductCategory[] = React.useMemo(() => {
     const uniqueCategories = Array.from(
       new Set(products.map((product) => product.category))
@@ -18,13 +18,30 @@ const ProductListPage: React.FC = () => {
     return ["all", ...uniqueCategories] as ProductCategory[];
   }, [products]);
 
-  //filter products based on selected category
+  //filter products based on selected category & search
   const filteredProducts = React.useMemo(() => {
-    if (selectedCategory === "all") {
-      return products;
+    let filtered = products;
+
+    //by category
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (product) => product.category === selectedCategory
+      );
     }
-    return products.filter((product) => product.category === selectedCategory);
-  }, [products, selectedCategory]);
+
+    //by search term
+    if (searchTerm.trim()) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (product) =>
+          product.name.toLowerCase().includes(searchLower) ||
+          product.description.toLowerCase().includes(searchLower) ||
+          product.category.toLowerCase().includes(searchLower)
+      );
+    }
+
+    return filtered;
+  }, [products, selectedCategory, searchTerm]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -36,7 +53,6 @@ const ProductListPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -80,8 +96,18 @@ const ProductListPage: React.FC = () => {
             <input
               type="text"
               placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            )}
           </div>
         </div>
 
