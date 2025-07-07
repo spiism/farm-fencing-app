@@ -8,17 +8,12 @@ import type { ProductCategory } from "../types/product";
 const ProductListPage: React.FC = () => {
   const { products, loading, error, refetch } = useProducts();
 
-  const categories: ProductCategory[] = [
-    "all",
-    "Wire Fencing",
-    "Electric Fence",
-    "Fence Posts",
-    "Chain Link",
-    "Wood Fencing",
-    "Fence Tools",
-    "Gate Hardware",
-    "Livestock Panels",
-  ];
+  const categories: ProductCategory[] = React.useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Set(products.map((product) => product.category))
+    );
+    return ["all", ...uniqueCategories] as ProductCategory[];
+  }, [products]);
 
   if (loading) {
     return <LoadingSpinner />;
