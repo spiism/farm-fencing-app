@@ -7,13 +7,24 @@ import type { ProductCategory } from "../types/product";
 
 const ProductListPage: React.FC = () => {
   const { products, loading, error, refetch } = useProducts();
+  const [selectedCategory, setSelectedCategory] =
+    React.useState<ProductCategory>("all");
 
+    
   const categories: ProductCategory[] = React.useMemo(() => {
     const uniqueCategories = Array.from(
       new Set(products.map((product) => product.category))
     );
     return ["all", ...uniqueCategories] as ProductCategory[];
   }, [products]);
+
+  //filter products based on selected category
+  const filteredProducts = React.useMemo(() => {
+    if (selectedCategory === "all") {
+      return products;
+    }
+    return products.filter((product) => product.category === selectedCategory);
+  }, [products, selectedCategory]);
 
   if (loading) {
     return <LoadingSpinner />;
@@ -25,6 +36,7 @@ const ProductListPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -73,16 +85,17 @@ const ProductListPage: React.FC = () => {
           </div>
         </div>
 
+        {/*category flter*/}
         <div className="mb-8">
           <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <button
                 key={category}
-                onClick={() => {}}
-                className={`px-4 py-2 rounded-lg hover:bg-gray-300 ${
-                  category === "all"
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-lg transition-colors ${
+                  category === selectedCategory
                     ? "bg-green-600 text-white hover:bg-green-700"
-                    : "bg-gray-200 text-gray-700"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
                 {category === "all" ? "All" : category}
@@ -91,7 +104,7 @@ const ProductListPage: React.FC = () => {
           </div>
         </div>
 
-        <ProductGrid products={products} />
+        <ProductGrid products={filteredProducts} />
       </main>
     </div>
   );
