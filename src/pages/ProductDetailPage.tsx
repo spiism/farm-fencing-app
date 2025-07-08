@@ -34,6 +34,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
   const handleAddToCart = () => {
     dispatch(addToCart({ product, quantity }));
+    setQuantity(1);
   };
 
   return (
