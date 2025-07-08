@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useProducts } from "../hooks/useProducts";
 import { addToCart } from "../store/slices/cartSlice";
+import { HapticsService } from "../services/haptics";
 import Header from "../components/common/Header";
 import type { RootState } from "../store";
 import LoadingSpinner from "../components/common/LoadingSpinner";
@@ -33,6 +34,8 @@ const ProductDetailPage: React.FC = () => {
     const newQuantity = quantity + change;
     if (product && newQuantity >= 1 && newQuantity <= product.inventory) {
       setQuantity(newQuantity);
+      //light haptic feedback for quantity changes
+      HapticsService.light();
     }
   };
 
@@ -52,7 +55,12 @@ const ProductDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-green-50">
-      <Header onCartClick={() => navigate("/cart")} />
+      <Header
+        onCartClick={() => {
+          HapticsService.light();
+          navigate("/cart");
+        }}
+      />
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <button

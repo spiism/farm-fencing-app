@@ -67,6 +67,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { Product } from "../../types/product";
 import { Preferences } from "@capacitor/preferences";
+import { HapticsService } from "../../services/haptics";
 
 export interface CartItem {
   product: Product;
@@ -127,6 +128,8 @@ const cartSlice = createSlice({
       } else {
         state.items.push({ product, quantity });
       }
+      //success haptic feedback for adding to cart
+      HapticsService.success();
 
       //save to storage after updating
       saveToStorage(state.items);
@@ -135,6 +138,9 @@ const cartSlice = createSlice({
       state.items = state.items.filter(
         (item) => item.product.id !== action.payload
       );
+
+      //warning haptic feedback for removing from cart
+      HapticsService.warning();
 
       //save to storage after updating
       saveToStorage(state.items);
@@ -150,11 +156,17 @@ const cartSlice = createSlice({
         item.quantity = action.payload.quantity;
       }
 
+      //light haptic feedback for quantity updates
+      HapticsService.light();
+
       //save to storage after updating
       saveToStorage(state.items);
     },
     clearCart(state) {
       state.items = [];
+
+      //error haptic feedback for clearing cart
+      HapticsService.error();
 
       //clear from storage
       Preferences.remove({ key: CART_STORAGE_KEY });
