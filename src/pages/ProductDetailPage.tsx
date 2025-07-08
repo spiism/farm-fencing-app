@@ -141,7 +141,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       </span>
                       <button
                         onClick={() => handleQuantityChange(1)}
-                        disabled={quantity >= product.inventory}
+                        disabled={quantity + cartQuantity >= product.inventory}
                         className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         +
