@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import type { Product } from "../types/product";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../store/slices/cartSlice";
+import Header from "../components/common/Header";
+import CartPanel from "../components/cart/CartPanel";
 
 interface ProductDetailPageProps {
   product: Product;
@@ -11,6 +15,8 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   onBack,
 }) => {
   const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
+  const [showCart, setShowCart] = React.useState(false);
 
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
@@ -20,36 +26,12 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   };
 
   const handleAddToCart = () => {
-    //TODO:add to cart logic
-    console.log(`Added ${quantity} x ${product.name} to cart`);
+    dispatch(addToCart({ product, quantity }));
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl">🚜</span>
-              <span className="text-xl font-semibold text-gray-900">
-                Farm Shop
-              </span>
-            </div>
-            <div className="flex items-center space-x-6">
-              <button className="text-green-600 hover:text-green-700 font-medium">
-                Products
-              </button>
-              <button className="flex items-center space-x-1 text-gray-600 hover:text-gray-700">
-                <span>🛒</span>
-                <span>Cart</span>
-                <span className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  0
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header onCartClick={() => setShowCart(true)} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/*back button */}
@@ -174,6 +156,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
           </div>
         </div>
       </main>
+      {showCart && <CartPanel onClose={() => setShowCart(false)} />}
     </div>
   );
 };
