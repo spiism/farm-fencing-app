@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import type { Product } from "../types/product";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../store/slices/cartSlice";
 import Header from "../components/common/Header";
 import CartPanel from "../components/cart/CartPanel";
+import type { RootState } from "../store";
 
 interface ProductDetailPageProps {
   product: Product;
@@ -17,6 +18,12 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
   const [showCart, setShowCart] = React.useState(false);
+
+  const cartItem = useSelector((state: RootState) =>
+    state.cart.items.find((item) => item.product.id === product.id)
+  );
+  const cartQuantity = cartItem?.quantity ?? 0;
+  const availableStock = product.inventory - cartQuantity;
 
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
@@ -91,7 +98,7 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   <div>
                     <span className="text-gray-600 font-medium">Stock:</span>
                     <div className="text-gray-900 font-semibold">
-                      {product.inventory} available
+                      {availableStock} available
                     </div>
                   </div>
                 </div>
