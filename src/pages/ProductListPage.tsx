@@ -54,13 +54,8 @@ const ProductListPage: React.FC = () => {
     return filtered;
   }, [products, selectedCategory, searchTerm]);
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <ErrorMessage message={error} onRetry={refetch} />;
-  }
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} onRetry={refetch} />;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -69,24 +64,27 @@ const ProductListPage: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center mb-6">
           <button
-            onClick={() => refetch()}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
+            onClick={refetch}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition"
           >
-            <span>🔄</span>
-            <span>Pull to refresh</span>
+            <span className="text-lg">🔄</span>
+            <span className="font-medium text-sm sm:text-base">
+              Pull to Refresh
+            </span>
           </button>
         </div>
 
-        {/*search bar */}
         <div className="mb-6">
           <div className="relative">
-            <span className="absolute left-3 top-3 text-gray-400">🔍</span>
+            <span className="absolute left-3 top-3 text-gray-400 text-lg">
+              🔍
+            </span>
             <input
               type="text"
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => dispatch(setSearchTerm(e.target.value))}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm sm:text-base"
             />
             {searchTerm && (
               <button
@@ -99,20 +97,19 @@ const ProductListPage: React.FC = () => {
           </div>
         </div>
 
-        {/*category flter*/}
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-8 overflow-x-auto">
+          <div className="flex flex-nowrap gap-2 pb-1 sm:flex-wrap">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => dispatch(setSelectedCategory(category))}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-4 py-2 rounded-full whitespace-nowrap border transition-colors text-sm sm:text-base ${
                   category === selectedCategory
-                    ? "bg-green-600 text-white hover:bg-green-700"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    ? "bg-green-600 text-white border-green-600 hover:bg-green-700"
+                    : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
                 }`}
               >
-                {category === "all" ? "All" : category}
+                {category === "all" ? "All Categories" : category}
               </button>
             ))}
           </div>
@@ -123,8 +120,6 @@ const ProductListPage: React.FC = () => {
           onProductClick={(product) => navigate(`/product/${product.id}`)}
         />
       </main>
-
-      {/* {showCart && <CartPanel onClose={() => setShowCart(false)} />} */}
     </div>
   );
 };
