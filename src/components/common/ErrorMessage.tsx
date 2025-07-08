@@ -21,6 +21,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({
         <p className="text-gray-600 mb-6 leading-relaxed">{message}</p>
         {onRetry && (
           <button
+            type="button"
             onClick={onRetry}
             className="px-4 py-2 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 min-h-[44px]"
           >
