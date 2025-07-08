@@ -25,6 +25,8 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   const cartQuantity = cartItem?.quantity ?? 0;
   const availableStock = product.inventory - cartQuantity;
 
+  const isOutOfStock = !product.available || availableStock <= 0;
+
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change;
     if (newQuantity >= 1 && newQuantity <= product.inventory) {
@@ -152,10 +154,17 @@ const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                     {/*add to cart*/}
                     <button
                       onClick={handleAddToCart}
-                      className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center space-x-2 transition-colors"
+                      disabled={isOutOfStock}
+                      className={`px-8 py-3 rounded-lg font-semibold flex items-center space-x-2 transition-colors ${
+                        isOutOfStock
+                          ? "bg-gray-400 cursor-not-allowed text-white"
+                          : "bg-green-600 hover:bg-green-700 text-white"
+                      }`}
                     >
                       <span>🛒</span>
-                      <span>Add to Cart</span>
+                      <span>
+                        {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+                      </span>
                     </button>
                   </div>
                 )}
