@@ -10,23 +10,20 @@ import {
 import ProductGrid from "../components/product/ProductGrid";
 import LoadingSpinner from "../components/common/LoadingSpinner";
 import ErrorMessage from "../components/common/ErrorMessage";
-import type { Product, ProductCategory } from "../types/product";
-import ProductDetailPage from "./ProductDetailPage";
-import CartPanel from "../components/cart/CartPanel";
+import type { ProductCategory } from "../types/product";
 import Header from "../components/common/Header";
+import { useNavigate } from "react-router-dom";
 
 const ProductListPage: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const { products, loading, error, refetch } = useProducts();
-  const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(
-    null
-  );
 
   const searchTerm = useSelector((state: RootState) => state.filter.searchTerm);
   const selectedCategory = useSelector(
     (state: RootState) => state.filter.selectedCategory
   );
-  const [showCart, setShowCart] = React.useState(false);
 
   const categories = React.useMemo(() => {
     const uniqueCategories = Array.from(
@@ -65,19 +62,9 @@ const ProductListPage: React.FC = () => {
     return <ErrorMessage message={error} onRetry={refetch} />;
   }
 
-  //show product detail if a product is selected
-  if (selectedProduct) {
-    return (
-      <ProductDetailPage
-        product={selectedProduct}
-        onBack={() => setSelectedProduct(null)}
-      />
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header onCartClick={() => setShowCart(true)} />
+      <Header onCartClick={() => navigate("/cart")} />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center mb-6">
@@ -133,11 +120,11 @@ const ProductListPage: React.FC = () => {
 
         <ProductGrid
           products={filteredProducts}
-          onProductClick={setSelectedProduct}
+          onProductClick={(product) => navigate(`/product/${product.id}`)}
         />
       </main>
 
-      {showCart && <CartPanel onClose={() => setShowCart(false)} />}
+      {/* {showCart && <CartPanel onClose={() => setShowCart(false)} />} */}
     </div>
   );
 };
